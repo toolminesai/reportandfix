@@ -1,47 +1,66 @@
+'use client'
+
+import Image from 'next/image'
+import Link from 'next/link'
+import { ArrowRight, CheckCircle2, ClipboardCheck, LockKeyhole, ScanLine, ShieldCheck } from 'lucide-react'
+
+const capabilities = [
+  { icon: ScanLine, title: 'Scan and report', copy: 'Capture a problem in seconds with location-aware reporting.' },
+  { icon: ClipboardCheck, title: 'Track progress', copy: 'Follow every update from submission to verified resolution.' },
+  { icon: ShieldCheck, title: 'Build trust', copy: 'Transparent ownership, accountability, and audit-ready history.' },
+]
+
 export default function Page() {
   return (
-    <main
-      style={{
-        colorScheme: 'light dark',
-        position: 'relative',
-        display: 'flex',
-        minHeight: '100vh',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: 'light-dark(#fff, #000)',
-        color: 'light-dark(#000, #fff)',
-      }}
-    >
-      <svg
-        aria-hidden="true"
-        style={{ width: 80, height: 80 }}
-        width={80}
-        height={80}
-        fill="none"
-        viewBox="0 0 20 20"
-        xmlns="http://www.w3.org/2000/svg"
-        stroke="currentColor"
-        strokeWidth="0.5"
-      >
-        <path
-          d="M14.2 14.2H17V6.9375C17 4.76288 15.2371 3 13.0625 3H5.8V5.8M14.2 14.2V7.79063L7.79062 14.2H14.2ZM14.2 14.2V17H6.9375C4.76288 17 3 15.2371 3 13.0625V5.8H5.8M5.8 5.8V12.2313L12.2313 5.8H5.8Z"
-          strokeLinejoin="round"
-        />
-      </svg>
-      <p
-        style={{
-          position: 'absolute',
-          left: '50%',
-          top: 'calc(50% + 56px)',
-          transform: 'translateX(-50%)',
-          whiteSpace: 'nowrap',
-          fontSize: '14px',
-          fontWeight: 500,
-          color: 'light-dark(#71717a, #a1a1aa)',
-        }}
-      >
-        Your v0 generation will show here.
-      </p>
+    <main className="min-h-screen overflow-hidden bg-background text-foreground">
+      <header className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-6 lg:px-10">
+        <Link href="/" className="flex items-center gap-3" aria-label="ReportAndFix home">
+          <Image src="/report-and-fix-logo.png" alt="ReportAndFix logo" width={176} height={176} className="h-12 w-12 object-contain" priority />
+          <span className="font-mono text-sm font-bold tracking-[0.18em] text-primary">REPORT<span className="text-brand-green">ANDFIX</span></span>
+        </Link>
+        <Link href="/auth" className="rounded-full border border-border bg-card px-5 py-2.5 text-sm font-semibold text-foreground transition hover:border-primary hover:bg-muted">
+          Sign in
+        </Link>
+      </header>
+
+      <section className="mx-auto grid w-full max-w-7xl gap-12 px-6 pb-20 pt-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:px-10 lg:pb-28 lg:pt-20">
+        <div className="max-w-2xl">
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-brand-blue/20 bg-brand-blue-soft px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-primary">
+            <CheckCircle2 className="h-4 w-4" /> Phase 1 foundation live
+          </div>
+          <h1 className="text-balance font-sans text-5xl font-bold leading-[1.04] tracking-[-0.045em] text-primary sm:text-6xl lg:text-7xl">
+            Report today.<br /><span className="text-brand-blue">A better tomorrow.</span>
+          </h1>
+          <p className="mt-7 max-w-xl text-pretty text-lg leading-8 text-muted-foreground">
+            ReportAndFix makes campus issues visible, actionable, and accountable. Give every report a clear path to the right person and a verified resolution.
+          </p>
+          <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+            <Link href="/auth" className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-3.5 text-sm font-bold text-primary-foreground transition hover:bg-brand-blue">
+              Get started <ArrowRight className="h-4 w-4" />
+            </Link>
+            <a href="#how-it-works" className="inline-flex items-center justify-center rounded-full border border-border px-6 py-3.5 text-sm font-semibold transition hover:bg-muted">See how it works</a>
+          </div>
+          <div className="mt-8 flex items-center gap-2 text-sm text-muted-foreground"><LockKeyhole className="h-4 w-4 text-brand-green" /> Built with privacy-first access controls</div>
+        </div>
+
+        <div className="relative flex justify-center lg:justify-end">
+          <div className="absolute -inset-8 rounded-[3rem] bg-brand-blue-soft/60 blur-3xl" aria-hidden="true" />
+          <div className="relative w-full max-w-md rounded-[2rem] border border-border bg-card p-4 shadow-2xl shadow-primary/10">
+            <div className="rounded-[1.4rem] bg-primary p-6 text-primary-foreground">
+              <div className="flex items-center justify-between"><span className="font-mono text-xs uppercase tracking-[0.2em] text-primary-foreground/70">Campus operations</span><span className="h-2.5 w-2.5 rounded-full bg-brand-green" /></div>
+              <div className="mt-14"><p className="text-sm text-primary-foreground/70">Today&apos;s focus</p><p className="mt-2 text-3xl font-bold tracking-tight">Make every issue count.</p></div>
+              <div className="mt-10 grid grid-cols-2 gap-3"><div className="rounded-2xl bg-primary-foreground/10 p-4"><p className="text-2xl font-bold">24h</p><p className="mt-1 text-xs text-primary-foreground/65">response loop</p></div><div className="rounded-2xl bg-brand-green p-4 text-primary"><p className="text-2xl font-bold">100%</p><p className="mt-1 text-xs text-primary/70">traceable</p></div></div>
+            </div>
+            <div className="flex items-center gap-3 px-3 py-4 text-sm"><div className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-green-soft text-brand-green"><CheckCircle2 className="h-5 w-5" /></div><div><p className="font-semibold">Transparent by design</p><p className="text-xs text-muted-foreground">Every update has an owner.</p></div></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="how-it-works" className="border-y border-border bg-muted/40">
+        <div className="mx-auto grid w-full max-w-7xl gap-8 px-6 py-16 lg:grid-cols-3 lg:px-10">
+          {capabilities.map(({ icon: Icon, title, copy }) => <div key={title} className="flex gap-4"><div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-card text-primary shadow-sm"><Icon className="h-5 w-5" /></div><div><h2 className="font-bold text-primary">{title}</h2><p className="mt-2 text-sm leading-6 text-muted-foreground">{copy}</p></div></div>)}
+        </div>
+      </section>
     </main>
   )
 }
