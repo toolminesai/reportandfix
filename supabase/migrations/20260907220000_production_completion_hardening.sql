@@ -1,0 +1,4 @@
+-- Applied to production as migrations 20260907163629, 20260907163713,
+-- and subsequent hardening migrations. This file documents the phase target.
+-- The live project already contains these changes; use supabase db pull to
+-- synchronize this local migration history before future db push operations.
