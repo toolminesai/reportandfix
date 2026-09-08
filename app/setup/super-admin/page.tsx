@@ -13,9 +13,13 @@ export default function SuperAdminSetupPage() {
   async function bootstrap() {
     setLoading(true)
     setMessage('')
-    const { error } = await createClient().rpc('bootstrap_super_admin')
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) { setLoading(false); return setMessage('Please sign in first, then return to this page.') }
+    const { error } = await supabase.rpc('bootstrap_super_admin')
+    if (error) { setLoading(false); return setMessage(error.message.includes('already') ? 'Super Admin setup is already complete.' : 'Only the first signed-in account can complete this setup.') }
+    await supabase.auth.refreshSession()
     setLoading(false)
-    if (error) return setMessage(error.message.includes('already') ? 'Super Admin setup is already complete.' : 'Only the first signed-in account can complete this setup.')
     router.replace('/staff')
     router.refresh()
   }
