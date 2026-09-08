@@ -2,11 +2,9 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 
 export default function SuperAdminSetupPage() {
-  const router = useRouter()
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -18,8 +16,6 @@ export default function SuperAdminSetupPage() {
     if (!user) { setLoading(false); return setMessage('Please sign in first, then return to this page.') }
     const { error } = await supabase.rpc('bootstrap_super_admin')
     if (error) { setLoading(false); return setMessage(error.message.includes('already') ? 'Super Admin setup is already complete. Sign out and sign in again.' : `Setup could not be completed: ${error.message}`) }
-    const { data: profile, error: profileError } = await supabase.from('profiles').select('role').eq('id', user.id).single()
-    if (profileError || profile?.role !== 'super_admin') { setLoading(false); return setMessage('The role was not saved. Please sign out, sign in again, and retry.') }
     await supabase.auth.refreshSession()
     window.location.assign('/staff')
   }
