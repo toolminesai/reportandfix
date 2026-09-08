@@ -18,9 +18,9 @@ async function compressImage(file:File):Promise<File>{
   const ctx=canvas.getContext('2d'); if(!ctx) throw new Error('Image processing unavailable')
   ctx.drawImage(bitmap,0,0,canvas.width,canvas.height); bitmap.close()
   let quality=.86
-  for(let i=0;i<7;i++){
+  for(let i=0;i<12;i++){
     const blob=await new Promise<Blob|null>(r=>canvas.toBlob(r,'image/jpeg',quality)); if(blob && blob.size<=MAX_BYTES) return new File([blob],file.name.replace(/\.[^.]+$/i,'.jpg'),{type:'image/jpeg'})
-    quality-=.1
+    quality-=.045
   }
   throw new Error('Could not compress this image below 300 KB. Choose a smaller image.')
 }
