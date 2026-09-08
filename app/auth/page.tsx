@@ -39,7 +39,7 @@ export default function AuthPage() {
     const supabase = createClient()
     const result = mode === 'signin'
       ? await supabase.auth.signInWithPassword({ email: normalizedEmail, password })
-      : await supabase.auth.signUp({ email: normalizedEmail, password, options: { emailRedirectTo: process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL ?? `${window.location.origin}/auth/callback`, data: { full_name: normalizedName } } })
+      : await supabase.auth.signUp({ email: normalizedEmail, password, options: { emailRedirectTo: `${window.location.origin}/auth/callback`, data: { full_name: normalizedName } } })
     setLoading(false)
     if (result.error) return setMessage(authMessage(result.error))
     if (mode === 'signin') {
