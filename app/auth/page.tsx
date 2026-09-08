@@ -12,6 +12,9 @@ function authMessage(error: { message: string }) {
   if (message.includes('email not confirmed')) return 'Please confirm your email before signing in.'
   if (message.includes('invalid login credentials')) return 'Invalid email or password.'
   if (message.includes('password')) return 'Please use a password with at least 8 characters.'
+  if (message.includes('rate limit') || message.includes('too many')) return 'Too many attempts. Please wait a few minutes and try again.'
+  if (message.includes('email_address_not_authorized') || message.includes('not authorized')) return 'This email cannot receive confirmation in the current environment. Try an approved email address or configure SMTP.'
+  if (message.includes('already registered') || message.includes('already been registered')) return 'This email is already registered. Try signing in instead.'
   return 'We could not complete that request. Please try again.'
 }
 
@@ -26,12 +29,17 @@ export default function AuthPage() {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    setLoading(true)
     setMessage('')
+    const normalizedEmail = email.trim().toLowerCase()
+    const normalizedName = name.trim()
+    if (mode === 'signup' && normalizedName.length < 2) return setMessage('Please enter your full name.')
+    if (password.length < 8) return setMessage('Please use a password with at least 8 characters.')
+    if (!normalizedEmail.includes('@')) return setMessage('Please enter a valid email address.')
+    setLoading(true)
     const supabase = createClient()
     const result = mode === 'signin'
-      ? await supabase.auth.signInWithPassword({ email: email.trim(), password })
-      : await supabase.auth.signUp({ email: email.trim(), password, options: { emailRedirectTo: `${window.location.origin}/auth/callback`, data: { full_name: name.trim() } } })
+      ? await supabase.auth.signInWithPassword({ email: normalizedEmail, password })
+      : await supabase.auth.signUp({ email: normalizedEmail, password, options: { emailRedirectTo: process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL ?? `${window.location.origin}/auth/callback`, data: { full_name: normalizedName } } })
     setLoading(false)
     if (result.error) return setMessage(authMessage(result.error))
     if (mode === 'signin') {
