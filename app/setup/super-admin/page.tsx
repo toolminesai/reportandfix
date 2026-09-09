@@ -14,8 +14,9 @@ export default function SuperAdminSetupPage() {
     const supabase = createClient()
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) { setLoading(false); return setMessage('Please sign in first, then return to this page.') }
-    const { error } = await supabase.rpc('bootstrap_super_admin')
+    const { data: claimedRole, error } = await supabase.rpc('bootstrap_super_admin')
     if (error) { setLoading(false); return setMessage(error.message.includes('already') ? 'Super Admin setup is already complete. Sign out and sign in again.' : `Setup could not be completed: ${error.message}`) }
+    if (claimedRole !== 'super_admin') { setLoading(false); return setMessage('The role claim was not confirmed. Please try again.') }
     await supabase.auth.refreshSession()
     window.location.assign('/staff')
   }
