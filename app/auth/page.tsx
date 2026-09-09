@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { FormEvent, useState } from 'react'
+import { FormEvent, useEffect, useState } from 'react'
 import { ArrowLeft, Loader2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
@@ -27,6 +27,12 @@ export default function AuthPage() {
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
 
+  useEffect(() => {
+    const error = new URLSearchParams(window.location.search).get('error')
+    if (error === 'confirmation') setMessage('Your confirmation link is invalid or expired. Request a new one and try again.')
+    if (error === 'account') setMessage('Your account profile is unavailable or suspended. Please contact an administrator.')
+  }, [])
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setMessage('')
@@ -44,8 +50,9 @@ export default function AuthPage() {
     if (result.error) return setMessage(authMessage(result.error))
     if (mode === 'signin') {
       const next = new URLSearchParams(window.location.search).get('next')
-      router.replace(next || '/dashboard')
-      router.refresh()
+      const { data: sessionData } = await supabase.auth.getSession()
+      if (!sessionData.session) return setMessage('Sign-in succeeded, but the session could not be saved. Please enable cookies and try again.')
+      window.location.assign(next || '/dashboard')
       return
     }
     setMessage('Account created. Check your email if confirmation is enabled.')
