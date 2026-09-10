@@ -28,10 +28,12 @@ export default function AuthPage() {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    const error = new URLSearchParams(window.location.search).get('error')
+    const params = new URLSearchParams(window.location.search)
+    const error = params.get('error')
     if (error === 'confirmation') setMessage('Your confirmation link is invalid or expired. Request a new one and try again.')
     if (error === 'account') setMessage('Your account profile is unavailable. Please contact an administrator.')
     if (error === 'suspended') setMessage('This account is suspended. Please contact an administrator.')
+    if (error) window.history.replaceState({}, '', '/auth')
   }, [])
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
